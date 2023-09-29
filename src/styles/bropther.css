@@ -1,0 +1,10 @@
+html{
+    background: black;
+    display: flex;
+
+    flex-direction: column-reverse;
+
+    align-items: first baseline;
+    
+    font-size: 30px;
+}
