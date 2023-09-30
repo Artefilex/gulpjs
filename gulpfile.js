@@ -9,6 +9,10 @@ const imagemin = require("gulp-imagemin")
 const uglify = require("gulp-uglify")
 const cssmin = require("gulp-clean-css")
 const concatJs = require("gulp-concat")
+
+const autopre = require("gulp-autoprefixer")
+const postcss = require('gulp-postcss');
+const { async } = require("q");
 // gulp.task("message", () => {
 //   console.log("gulp ilk deneme");
 // });
@@ -36,6 +40,14 @@ gulp.task("copy3",()=>{
     .pipe(cssmin())
     .pipe(gulp.dest("./dist/styles/"))
 })
+
+gulp.task("autopres" , async ()=>{
+  await  gulp.src("./src/styles/bropther.css")
+         .pipe(autopre('last 2 versions', 'safari 5', 'ie 8', 'ie 9', 'Firefox 14', 'opera 12.1', 'ios 6', 'android 4'))
+         .pipe(cssmin())
+         .pipe(gulp.dest("./bro/styles"))
+})
+
 gulp.task("copy" , gulp.parallel( "copy1","copy2" ,"copy3")
 )
 
