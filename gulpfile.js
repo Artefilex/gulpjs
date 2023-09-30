@@ -9,9 +9,10 @@ const imagemin = require("gulp-imagemin")
 const uglify = require("gulp-uglify")
 const cssmin = require("gulp-clean-css")
 const concatJs = require("gulp-concat")
-
+const babel = require("gulp-babel")
 const autopre = require("gulp-autoprefixer")
 const postcss = require('gulp-postcss');
+const livereload = require("gulp-livereload");
 const { async } = require("q");
 // gulp.task("message", () => {
 //   console.log("gulp ilk deneme");
@@ -23,20 +24,24 @@ const { async } = require("q");
 //     console.log("default her seferin de calısabilen gulp ile cagrılır ")
 // })
 
-gulp.task("copy1",()=>{
-    gulp.src("./src/images/**/*")
+gulp.task("copy1",async ()=>{
+   await  gulp.src("./src/images/**/*")
     .pipe(imagemin())
     .pipe(gulp.dest("./dist/images/"));
    
 })
-gulp.task("copy2",()=>{
-    gulp.src("./src/js/*.js")
+gulp.task("copy2", async ()=>{
+   await  gulp.src("./src/js/*.js")
+    .pipe(babel({
+        presets: ['@babel/env']
+    }))
     .pipe(uglify())
     .pipe(concatJs("index.js"))
     .pipe(gulp.dest("./dist/js/"))
+  
 })
-gulp.task("copy3",()=>{
-    gulp.src("./src/styles/*.css")
+gulp.task("copy3", async ()=>{
+   await gulp.src("./src/styles/*.css")
     .pipe(cssmin())
     .pipe(gulp.dest("./dist/styles/"))
 })
@@ -50,12 +55,18 @@ gulp.task("autopres" , async ()=>{
 
 gulp.task("copy" , gulp.parallel( "copy1","copy2" ,"copy3")
 )
+gulp.task("watch", async ()=>{
+    livereload.listen()
+    gulp.watch("./src/**", gulp.series("copy")).on("change", (path) => {
+        console.log(`Dosya değişti: ${path}`);
+        livereload.changed(path);})
 
-gulp.task('default', gulp.series("copy"))
-
-gulp.task("izle", ()=>{
-    gulp.watch("./src/js/*.js",gulp.series("copy3"))
-    gulp.watch("./src/js/*.js",gulp.series("copy3"))
 })
+gulp.task('default', gulp.series("copy", "watch"));
+
+// gulp.task("izle", ()=>{
+//     gulp.watch("./src/js/*.js",gulp.series("copy3"))
+//     gulp.watch("./src/js/*.js",gulp.series("copy3"))
+// })
 
 // sass csse cevirme  npm  i  gulp-sass --save-dev
