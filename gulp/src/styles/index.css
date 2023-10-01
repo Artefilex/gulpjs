@@ -1,0 +1,13 @@
+:root{
+    --full-black: rgb(0,0,0);
+    --full-white: rgb(255,255,255);
+    --full-purpe: rgb(197, 8, 255);
+}
+
+body {
+    background: var(--full-purpe);
+    width: 100%;
+    height: 4rem;
+    display: grid;
+    grid-area: auto;
+}
